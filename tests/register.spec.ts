@@ -1,4 +1,16 @@
 import { chromium, expect, test } from "@playwright/test";
+// vài trang này đk tk : https://org-console.iam-center.dev-tokyotechlab.com/register
+// vào trang https://dropmail.me/en/  tạo email
+
+// sau đó vào trang https://admin-console.iam-center.dev-tokyotechlab.com/ ,đk với tk adim
+// và kích hoạt tk 
+// sau đó vào mail kich -> tọa mk mới thành công 
+// sau đó quay lại mail _ -> click vào link đnag nhập
+// sau đó vào nhân viên và xem tk đã đang kí thành công 
+// sau đó vào trang dev admin https://admin-console.iam-center.dev-tokyotechlab.com/admin/organization kích haotj tk 
+// sau đó quay lại trnag hrm ,,https://kali.hrm.dev-tokyotechlab.com/user vừa tạo tạo vai trò 
+// sau đó  https://krixi.org-console.iam-center.dev-tokyotechlab.com/user  tạo người dùng mới 
+
 
 // test.afterEach(async ({page})=>{
 //     await   page.pause()
@@ -24,6 +36,8 @@ test("hanlde muntil page", async ({ }) => {
     const page1 = await Context.newPage()
     const page2 = await Context.newPage()
     const page3 = await Context.newPage()
+    const page4 = await Context.newPage()
+    const page5 = await Context.newPage()
 
     const allPages = Context.pages()
 
@@ -34,13 +48,6 @@ test("hanlde muntil page", async ({ }) => {
     const   tenmail = await page1.locator('[class="address"]').textContent()
     console.log(`${tenmail}`)
 
-    // await   page1.goto('https://10minutemail.net/')
-    // // await   page1.waitForTimeout(2000)
-    // await   page1.locator('//button[@class="fc-button fc-cta-consent fc-primary-button"]').click()
-    // const   tenmail = await page1.locator('#fe_text').textContent()
-    // await   page1.getByRole('button', { name: ' Copy to clipboard' }).click()
-    // // console.log(`${tenmail}`)
-  
 
 
 
@@ -98,18 +105,10 @@ test("hanlde muntil page", async ({ }) => {
     await page3.getByText('Kích hoạt').click()
 
     // await   expect(page1.getByText(`${tenmail}`)).toBeVisible()
-    await   page1.waitForTimeout(5000)
+    // await   page1.waitForTimeout(5000)
     await expect(page1.getByText('[TeamHub]Cảm ơn đã đăng ký sử dụng dịch vụ')).toBeVisible()
-    // await   page1.waitForTimeout(10000)
-    // await expect(page1.getByRole('link', { name: '[TeamHub] Thông báo về việc kích hoạt' })).toBeVisible()
-    // await   page1.waitForLoadState()
-
-
-    
-
-    
-    
-    // await expect(page1.getByText('[TeamHub]Cảm ơn đã đăng ký s')).toBeVisible()
+    await   page1.waitForTimeout(4000)
+    await expect(page1.getByRole('link', { name: '[TeamHub] Thông báo về việc kích hoạt' })).toBeVisible()
     
     // const thongbaokichhoat =await page1.getByText('Thông báo về việc kích hoạt tài khoản Doanh nghiệp')
     // await expect(thongbaokichhoat).toBeVisible()
@@ -121,12 +120,29 @@ test("hanlde muntil page", async ({ }) => {
     // await page1.waitForTimeout(3000)
     // await page1.waitForSelector('a')
     // await page1.waitForTimeout(5000)
-    // await expect(page1.getByText('[TeamHub]Thông báo về việc kích hoạt')).toBeVisible()
+    // await expect(page1.getByText('[TeamHub]Thông báo về việc kích hoạt tài khoản Doanh nghiệp')).toBeVisible()
 
 
 
-    await page1.pause()
+    // await page1.pause()
 
+    // await   page4.getByPlaceholder('Nhập mật khẩu mới').fill('Ab12345@')
+    // await   page4.getByPlaceholder('Xác nhận mật khẩu mới').fill('Ab12345@')
+    // await   page4.getByRole('button', { name: 'Tạo mật khẩu' }).click()
+
+    // // thong bao kich hoat tai khoan thanh cong
+
+    // await expect(page1.getByText('[TeamHub]Thông báo kích hoạt tài khoản thành công')).toBeVisible()
+    // await page1.getByRole('link', { name: 'https://hyw.hrm.dev-' }).click()
+
+    // await page5.goto('https://org-console.iam-center.dev-tokyotechlab.com/login')
+    // await page5.getByPlaceholder('Nhập email').fill(`${tenmail}`)
+    // await page5.getByPlaceholder('Nhập mật khẩu').fill('Ab12345@')
+    // await page5.getByRole('button', { name: 'Đăng nhập' }).click()
+    // await page5.getByText('Truy cập').first().click()
+
+    
+    
 
 
 
