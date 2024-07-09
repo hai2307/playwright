@@ -1,8 +1,18 @@
-import { test, expect, chromium } from '@playwright/test';   
+import { test, expect, chromium ,Page } from '@playwright/test';   
+import axios from 'axios';
+// vài trang này đk tk : https://org-console.iam-center.dev-tokyotechlab.com/register
+// vào trang https://dropmail.me/en/  tạo email
 
-// test.afterEach(async ({page})=>{
-//     await   page.pause()
-// })
+// sau đó vào trang https://admin-console.iam-center.dev-tokyotechlab.com/admin/organization ,đk với tk adim
+// và kích hoạt tk 
+// sau đó vào mail kich -> tọa mk mới thành công 
+// sau đó quay lại mail _ -> click vào link đnag nhập
+// sau đó vào nhân viên và xem tk đã đang kí thành công 
+// sau đó vào trang dev admin https://admin-console.iam-center.dev-tokyotechlab.com/admin/organization kích haotj tk 
+// sau đó quay lại trnag hrm ,,https://kali.hrm.dev-tokyotechlab.com/user vừa tạo tạo vai trò 
+// sau đó  https://krixi.org-console.iam-center.dev-tokyotechlab.com/user  tạo người dùng mới 
+
+
 function generateRandomString(length: number): string {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let result = '';
@@ -14,7 +24,8 @@ function generateRandomString(length: number): string {
 }
 
 const randomString = generateRandomString(5);
-const randomString3 = generateRandomString(3);
+const randomString3 = generateRandomString(3)
+const randommail = generateRandomString(4)
 
 test("hanlde muntil page", async ({ }) => {
     const browser = await chromium.launch({ headless: false })
@@ -27,23 +38,16 @@ test("hanlde muntil page", async ({ }) => {
     const page5 = await Context.newPage()
 
     const allPages = Context.pages()
-    
-    
-    await   page1.goto('https://dropmail.me/en')
-    await   page1.waitForTimeout(2000)
-    const   tenmail = await page1.locator('[class="address"]').textContent()
+
+    await   page1.goto('https://www.mailinator.com/')
+    await   page1.waitForLoadState()
+    const   search= page1.locator('#search')
+    await   search.click()
+    await   search.fill(`${randommail}`)
+    await   page1.locator('[value="Search for public inbox for free"]').click()
+    await   page1.waitForLoadState()
+    const   tenmail = await   page1.locator('#inbox_field').textContent()
     console.log(`${tenmail}`)
-
-    // await   page1.goto('https://10minutemail.net/')
-    // // await   page1.waitForTimeout(2000)
-    // await   page1.locator('//button[@class="fc-button fc-cta-consent fc-primary-button"]').click()
-    // const   tenmail = await page1.locator('#fe_text').textContent()
-    // await   page1.getByRole('button', { name: ' Copy to clipboard' }).click()
-    // // console.log(`${tenmail}`)
-  
-
-
-
 
     await page2.goto('https://org-console.iam-center.dev-tokyotechlab.com/register')
     await expect(page2.locator('.register-form-title')).toBeVisible()
@@ -59,10 +63,8 @@ test("hanlde muntil page", async ({ }) => {
 
     const   email = await page2.locator('#input-12')
     await   email.click()
-    // await page2.keyboard.down('Control');
-    // await page2.keyboard.press('KeyV'); // Paste
-    // await page2.keyboard.up('Control');
-    await   email.fill(`${tenmail}`)
+ 
+    await   email.fill(`${randommail}@mailinator.com`)
 
 
     const   tendoanhnghiep = await page2.locator('#input-6')
@@ -97,33 +99,55 @@ test("hanlde muntil page", async ({ }) => {
     await page3.getByRole('button', { name: 'Chờ phê duyệt' }).first().click()
     await page3.getByText('Kích hoạt').click()
 
-    // await   expect(page1.getByText(`${tenmail}`)).toBeVisible()
+    
     await   page1.waitForTimeout(5000)
-    await expect(page1.getByText('[TeamHub]Cảm ơn đã đăng ký sử dụng dịch vụ')).toBeVisible()
-    // await   page1.waitForTimeout(10000)
-    // await expect(page1.getByRole('link', { name: '[TeamHub] Thông báo về việc kích hoạt' })).toBeVisible()
-    // await   page1.waitForLoadState()
+    await   page1.waitForSelector('//tr[@ng-repeat="email in emails"]');
+    await   expect(page1.locator('//tr[@ng-repeat="email in emails"]').first()).toBeVisible()
 
+    await   page1.waitForTimeout(5000)
+    await   expect(page1.getByText('[TeamHub] Thông báo về việc kích hoạt tài khoản')).toBeVisible
+    await   await page1.waitForSelector('//tr[@ng-repeat="email in emails"][1]');
+    await  expect(page1.locator('//tr[@ng-repeat="email in emails"][1]')).toBeVisible()
+    await  page1.getByRole('cell', { name: '[TeamHub] Thông báo về việc k' }).click()
+    const [newPage] = await Promise.all([
+        Context.waitForEvent('page'), // Đợi trang mới mở ra
+        page1.frameLocator('iframe[name="html_msg_body"]').getByRole('link', { name: 'Kích hoạt' }).click()
+      ]);
+    // await   page1.frameLocator('iframe[name="html_msg_body"]').getByRole('link', { name: 'Kích hoạt' }).click()
 
-    
+     // đổi mật khẩu 
+    const nhapmatkhau = await newPage.locator('[placeholder="Nhập mật khẩu"]')
+    await nhapmatkhau.fill('Ab@123456')
+    const nhapmatkhau2 = await newPage.locator('[placeholder="Xác nhận mật khẩu mới"]')
+    await nhapmatkhau2.fill('Ab@123456')
+    const taomatkhau2 = await newPage.locator('[class="v-btn__content"]')
+    await taomatkhau2.click()
+    await newPage.waitForTimeout(5000)
 
-    
-    
-    // await expect(page1.getByText('[TeamHub]Cảm ơn đã đăng ký s')).toBeVisible()
-    
-    // const thongbaokichhoat =await page1.getByText('Thông báo về việc kích hoạt tài khoản Doanh nghiệp')
-    // await expect(thongbaokichhoat).toBeVisible()
-    // const clickvaolinkdoimatkhau =await  page1.getByRole('link', { name: 'ct.sendgrid.net/ls/click?upn' }).first()
-    // await clickvaolinkdoimatkhau.click()
-    // await expect(page1.getByRole('heading', { name: 'Your temporary email:' })).toBeVisible()
-    
-    // await expect(page1.getByText('[TeamHub]Cảm ơn đã đăng ký s')).toBeVisible()
-    // await page1.waitForTimeout(3000)
-    // await page1.waitForSelector('a')
-    // await page1.waitForTimeout(5000)
-    // await expect(page1.getByText('[TeamHub]Thông báo về việc kích hoạt')).toBeVisible()
-
-
+    await   page1.getByRole('link', { name: 'Back to Inbox' }).click()
+    await   expect(page1.getByRole('cell', { name: '[TeamHub] Thông báo kích hoạt' })).toBeVisible
+    // await   page1.getByRole('cell', { name: '[TeamHub] Thông báo kích hoạt' }).click()
+    // const [twoPage] = await Promise.all([
+    //     Context.waitForEvent('page'), // Đợi trang mới mở ra
+    //     page1.frameLocator('iframe[name="html_msg_body"]').getByRole('link', { name: `https://${randomString3}.hrm.dev-` }).click()
+    //   ]);
+    //   await twoPage.waitForLoadState()
+    // await  twoPage.getByPlaceholder('Nhập email').fill(`test${randommail}@mailinator.com`)
+    // await  twoPage.getByPlaceholder('Nhập mật khẩu').fill('Ab@123456')
+    // await  twoPage.getByRole('button', { name: 'Đăng nhập' }).click()
+    // await  twoPage.getByText('Truy cập').first().click()
+    // await  expect(twoPage.getByRole('img', { name: 'coming soon' })).toBeVisible()
+    // dang nhap 
+    // await  newPage.waitForLoadState()
+    await  newPage.waitForTimeout(26000)
+    await  newPage.getByPlaceholder('Nhập email').click()
+    await  newPage.getByPlaceholder('Nhập email').fill(`${randommail}@mailinator.com`)
+    await  newPage.waitForTimeout(2000)
+    await  newPage.getByPlaceholder('Nhập mật khẩu').fill('Ab@123456')
+    await  newPage.waitForTimeout(2000)
+    await  newPage.getByRole('button', { name: 'Đăng nhập' }).click()
+    await  newPage.getByText('Truy cập').first().click()
+    // await  expect(newPage.getByRole('img', { name: 'coming soon' })).toBeVisible()
 
     await page1.pause()
 
