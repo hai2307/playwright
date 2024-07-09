@@ -1,4 +1,4 @@
-import { chromium, expect, test } from "@playwright/test";
+import { test, expect, chromium } from '@playwright/test';   
 
 // test.afterEach(async ({page})=>{
 //     await   page.pause()
@@ -16,17 +16,17 @@ function generateRandomString(length: number): string {
 const randomString = generateRandomString(5);
 const randomString3 = generateRandomString(3);
 
-
 test("hanlde muntil page", async ({ }) => {
-    const browser = await chromium.launch();
-    const Context = await browser.newContext();
+    const browser = await chromium.launch({ headless: false })
+    const Context = await browser.newContext()
 
     const page1 = await Context.newPage()
     const page2 = await Context.newPage()
     const page3 = await Context.newPage()
+    const page4 = await Context.newPage()
+    const page5 = await Context.newPage()
 
     const allPages = Context.pages()
-
     
     
     await   page1.goto('https://dropmail.me/en')
